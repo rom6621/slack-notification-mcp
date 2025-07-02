@@ -5,6 +5,7 @@ import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import bolt from "@slack/bolt";
 
 import { PostDirectMessage } from "./tools/post-direct-message.js";
+import { HTTPException } from "hono/http-exception";
 
 export const server = new Hono();
 
@@ -21,8 +22,12 @@ server.all("/mcp", async (c) => {
     version: "0.0.1",
   });
 
-  // Tools
   const memberId = c.req.header("X-Slack-Member-Id");
+  if (memberId === undefined) {
+    throw new HTTPException(401, { message: "X-Slack-Member-Id is required" });
+  }
+
+  // Tools
   const postMessage = new PostDirectMessage(boltApp, memberId);
 
   // DI
@@ -36,10 +41,11 @@ server.all("/mcp", async (c) => {
 });
 
 async function main() {
+  const port = process.env.PORT ? parseInt(process.env.PORT, 10) : 3000;
   serve(
     {
       fetch: server.fetch,
-      port: 7070,
+      port,
     },
     (info) => {
       console.log(`Server is running on http://localhost:${info.port}`);

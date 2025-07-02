@@ -11,10 +11,14 @@
   "scripts": {
     "dev": "tsx --watch --env-file=.env src/server.ts",
     "dev:stdout": "tsx --watch --env-file=.env src/index.ts",
-    "build": "tsc"
+    "typecheck": "tsc --noEmit",
+    "clean": "rimraf dist",
+    "build": "npm run clean && tsc",
+    "start": "node dist/server.js",
+    "postinstall": "npm run build"
   },
   "files": [
-    "build"
+    "dist"
   ],
   "dependencies": {
     "@hono/mcp": "^0.1.0",

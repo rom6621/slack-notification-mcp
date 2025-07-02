@@ -29,10 +29,8 @@ export class PostDirectMessage {
             };
           }
 
-          const {
-            channel: { id: channelId },
-          } = openConvResp;
-          if (channelId === undefined) {
+          const { channel } = openConvResp;
+          if (channel?.id === undefined) {
             return {
               content: [
                 {
@@ -45,7 +43,7 @@ export class PostDirectMessage {
 
           // Markdown messageを送信する
           const postMessageResp = await this.app.client.chat.postMessage({
-            channel: channelId,
+            channel: channel.id,
             text: message,
             mrkdwn: isMarkdown,
           });

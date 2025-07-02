@@ -1,0 +1,10 @@
+name: slack-notification-mcp
+
+infra:
+  path: ./infra
+
+services:
+  app:
+    project: app
+    language: js
+    host: appservice
